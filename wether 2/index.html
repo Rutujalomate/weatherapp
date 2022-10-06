@@ -1,0 +1,196 @@
+<html>
+    <head>
+         <style>
+  #container{
+    /* height: 50%;
+    border:1px solid red ;
+    width: 50%; */
+    /* display: flex; */
+    /* display: grid;
+  grid-template-columns: repeat(4,1fr);
+  grid-template-rows: repeat(1,auto); */
+  display: grid;
+  grid-gap: 32px 20px;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 70px 0 20px;
+
+}   
+ :root {
+  --bg_main: #0a1f44;
+  --text_light: #fff;
+  --text_med: #53627c;
+  --text_dark: #1e2432;
+  --red: #ff1e42;
+  --darkred: #c3112d;
+  --orange: #ff8c00;
+} 
+#container>div{
+   background-color: white;
+   width: 100%;
+   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+body {
+  font: 1rem/1.3 "Roboto", sans-serif;
+  background: var(--bg_main);
+  /* color: var(--text_dark); */
+  padding: 70px;
+
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-weight: normal;
+}
+
+button {
+  cursor: pointer;
+}
+ 
+input {
+  -webkit-appearance: none;
+}
+ button{
+    font-size: 1.5rem;
+    color: red;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  padding: 15px 20px;
+  margin-left: 15px;
+  border-radius: 5px;
+  color:   red;
+
+  /* transition: background 0.3s ease-in-out; */
+  background-color: red;
+
+ }
+button,
+input {
+   border: none; 
+  background: none;
+  outline: none;
+  
+;
+  
+}
+
+input{
+    border-bottom: 1px solid;
+    font-size: 2rem;
+  height: 40px;
+ padding: 5px 5px 10px; 
+  border-bottom: 1px solid;
+  color: azure;
+  
+
+}
+
+ 
+h1{
+    font-weight: bold;
+  font-size: 4rem;
+  letter-spacing: 0.02em;
+  padding: 0 0 30px 0;
+  color: azure;
+  
+}
+
+        </style>
+
+    </head>
+    <body>
+<h1>Simple Wether App</h1>
+<input type ="text" id="city" placeholder="Search for a city"/>
+<button onclick="getData()">Submit</button>
+    
+    <div id="container"></div>
+    <div class="mapouter"><div class="gmap_canvas">
+        <iframe
+         width="600" height="500" id="gmap_canvas" 
+         
+        frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+        
+        
+        </div></div>
+
+    </body>
+</html>
+<script>
+const apikey="b9779ac8d9df2eff153c0db79eda5933";
+
+async function getData(){
+    let city=document.getElementById('city').value;
+
+    // let url='https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}';
+     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}&units=metric`;
+   
+    // let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`;
+
+
+//https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid=b9779ac8d9df2eff153c0db79eda5933
+    console.log(url)
+
+    let res=await fetch(url);
+    let data=await res.json();
+    //  `https://openweathermap.org/img/wn/${weather[0]["icon"] }@2x.png`;
+    //   console.log(icon)
+    append(data)
+    console.log(data)
+
+}
+function getLocationWeather() {
+  navigator.geolocation.getCurrentPosition(success);
+
+  function success(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    getData(latitude, longitude);
+
+    console.log(latitude);
+    console.log(longitude);
+	AIzaSyDIWN_oo_IbvTk839N-Z0xKr5etcSFFhhI
+  }
+}
+function append(data){
+    
+let container=document.getElementById('container');
+container.innerHTML=null;
+
+div=document.createElement("div");
+
+let a=document.createElement("h2");
+a.innerText=data.name;
+a.style.color="grey";
+
+let b=document.createElement("h1");
+
+// b.innerText= ` ${data.main.temp} C`;
+b.innerText= `${Math.round(data.main.temp)}C`;
+b.style.color="black";
+
+let e=document.createElement("img")
+e.src=  `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${
+        data.weather[0]["icon"]
+      }.svg`
+
+
+let c=document.createElement("h3");
+c.innerHTML= ` ${data.weather[0]["description"]}`;
+c.style.color="grey";
+
+
+let d=document.getElementById("gmap_canvas")
+d.src=`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+
+
+// let d=document.createElement("img");
+// // d.innerHTML= `is: ${data.weather[0]["description"]}`;
+// d. src=`${icon}`
+
+
+div.append(a,b,e,c)
+container.append(div)
+}
+
+</script>
